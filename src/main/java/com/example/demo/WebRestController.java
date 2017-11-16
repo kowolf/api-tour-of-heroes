@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,8 @@ public class WebRestController {
 		heroList.add(hero1);
 		heroList.add(hero2);
 		
+		System.out.println("GET[]: " + heroList);
+		
 		ResponseEntity<List<Hero>> responseEntity = new ResponseEntity<>(heroList, HttpStatus.OK);
 
 		return responseEntity;
@@ -56,8 +59,43 @@ public class WebRestController {
 			result = hero2;
 		}
 		
+		System.out.println("GET: " + result);
+		
 		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(result, HttpStatus.OK);
 		return responseEntity;  
 	}
+	
+	@RequestMapping(value="/api/hero", method = RequestMethod.POST)
+	public ResponseEntity<Hero> createHero(@RequestBody Hero hero) {
+		
+		hero.setId(3);
+		System.out.println("POST: " + hero);
+		
+		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(hero, HttpStatus.OK);
+		return responseEntity;  
+	}
+	
+	@RequestMapping(value="/api/hero/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Hero> updateHero(@PathVariable Integer id,@RequestBody Hero hero) {
+		System.out.println("UPDATE: " + hero);
+		
+		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(hero, HttpStatus.OK);
+		return responseEntity;  
+	}
+	
+	@RequestMapping(value="/api/hero/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Hero> deleteHero(@PathVariable Integer id) {
+		
+		System.out.println("DELETE: " + id);
+		
+		Hero result = new Hero();
+		result.setId(id);
+		result.setName("Delete");
+		
+		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(result, HttpStatus.OK);
+		return responseEntity;  
+	}
+	
+	
 
 }

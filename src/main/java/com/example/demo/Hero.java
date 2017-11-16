@@ -20,4 +20,11 @@ public class Hero {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "Hero [id=" + id + ", name=" + name + "]";
+	}
+	
+	
+
 }
