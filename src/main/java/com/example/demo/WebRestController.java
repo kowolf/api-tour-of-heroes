@@ -3,6 +3,7 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WebRestController {
+	
+	@Autowired
+	HeroService service;
 
 	@RequestMapping("/api/hello")
 	public String hi() {
@@ -22,17 +26,10 @@ public class WebRestController {
 	@RequestMapping(value="/api/hero", method = RequestMethod.GET)
 	public ResponseEntity<List<Hero>> getHeroList() {
 		Hero hero1 = new Hero();
-		hero1.setId(1);
-		hero1.setName("Karl");
 		
-		Hero hero2 = new Hero();
-		hero2.setId(2);
-		hero2.setName("Wendy");
 		
-		List <Hero> heroList = new ArrayList<>();
-		
-		heroList.add(hero1);
-		heroList.add(hero2);
+		List <Hero> heroList = service.getAllHeros();
+	
 		
 		System.out.println("GET[]: " + heroList);
 		
@@ -43,21 +40,8 @@ public class WebRestController {
 	
 	@RequestMapping(value="/api/hero/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Hero> getHero(@PathVariable Integer id) {
-		Hero hero1 = new Hero();
-		hero1.setId(1);
-		hero1.setName("Karl");
 		
-		Hero hero2 = new Hero();
-		hero2.setId(2);
-		hero2.setName("Wendy");
-		
-		Hero result = null;
-		
-		if (id == 1) {
-			result = hero1;
-		} else if (id == 2) {
-			result = hero2;
-		}
+		Hero result = service.getHero(id);
 		
 		System.out.println("GET: " + result);
 		
@@ -68,7 +52,7 @@ public class WebRestController {
 	@RequestMapping(value="/api/hero", method = RequestMethod.POST)
 	public ResponseEntity<Hero> createHero(@RequestBody Hero hero) {
 		
-		hero.setId(3);
+		service.saveHero(hero);
 		System.out.println("POST: " + hero);
 		
 		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(hero, HttpStatus.OK);
@@ -79,6 +63,8 @@ public class WebRestController {
 	public ResponseEntity<Hero> updateHero(@PathVariable Integer id,@RequestBody Hero hero) {
 		System.out.println("UPDATE: " + hero);
 		
+		service.saveHero(hero);
+		
 		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(hero, HttpStatus.OK);
 		return responseEntity;  
 	}
@@ -88,9 +74,10 @@ public class WebRestController {
 		
 		System.out.println("DELETE: " + id);
 		
-		Hero result = new Hero();
-		result.setId(id);
-		result.setName("Delete");
+		service.deleteHero(id);
+		
+		 Hero result = new Hero();
+		 result.setId(id);
 		
 		ResponseEntity<Hero> responseEntity = new ResponseEntity<>(result, HttpStatus.OK);
 		return responseEntity;  
